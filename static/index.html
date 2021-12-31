@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+</head>
+<body>
+    <h1>Web-Based Quiz Tool</h1>
+    <a href='javascript:getQs()'>Click here to see list of questions</a>
+    <div id="qDiv"></div>
+</body>
+<script>
+
+    function getQs()
+    { 
+        let xReq = new XMLHttpRequest();
+        xReq.onreadystatechange = displayQs;
+
+        xReq.open('GET','/questions',true);
+        xReq.send();
+    }
+
+    function displayQs()
+    {
+       
+        if (this.readyState == 4 && this.status == 200)
+        {
+            let content = '<form>'
+
+            let quesDiv = document.getElementById('qDiv');
+
+            let questionList = JSON.parse(this.responseText);
+            
+            var radioButtonGroup = 1;
+
+            for (q of questionList)
+            {
+                var optionIndex = 0;
+                
+                content += '<br><p>' + q.stem + '</p>'
+
+                let optionList = q.options;
+
+                for (o of optionList) {
+                    content += '<input id='+optionIndex+' type="radio" name=group'+radioButtonGroup+' value='+o+' onclick=javascript:choice'+radioButtonGroup+'()>';
+                    content += '<label id=option'+optionIndex+'>' + o + '</label>'
+                    content += '<br>';
+
+                    optionIndex++;
+                }
+
+                content += '<label id=message-check'+radioButtonGroup+'></label>'
+                radioButtonGroup++;
+            }
+
+            content += '<br><br><input type="submit" formaction=javascript:checkScore()><h3 id=testDiv></h3></form>'
+
+            quesDiv.innerHTML = content;
+        }
+    }
+
+    function choice1() {
+        let q1answer = document.querySelector('input[name="group1"]:checked').value;
+
+        let xReq = new XMLHttpRequest();
+        xReq.onreadystatechange = displayMsg1;
+
+        xReq.open('GET','/q1result?group1='+q1answer,true);
+        xReq.send();
+    }
+
+    function displayMsg1() {
+        let label = document.getElementById('message-check1')
+        
+        if (this.readyState == 4 && this.status == 200)
+        {
+            label.innerHTML = this.responseText;
+        }
+    }
+
+    function choice2() {
+        let q2answer = document.querySelector('input[name="group2"]:checked').value;
+
+        let xReq = new XMLHttpRequest();
+        xReq.onreadystatechange = displayMsg2;
+
+        xReq.open('GET','/q2result?group2='+q2answer,true);
+        xReq.send();
+    }
+
+    function displayMsg2() {
+        let label = document.getElementById('message-check2')
+        
+        if (this.readyState == 4 && this.status == 200)
+        {
+            label.innerHTML = this.responseText;
+        }
+    }
+
+    function choice3() {
+        let q3answer = document.querySelector('input[name="group3"]:checked').value;
+
+        let xReq = new XMLHttpRequest();
+        xReq.onreadystatechange = displayMsg3;
+
+        xReq.open('GET','/q3result?group3='+q3answer,true);
+        xReq.send();
+    }
+
+    function displayMsg3() {
+        let label = document.getElementById('message-check3')
+        
+        if (this.readyState == 4 && this.status == 200)
+        {
+            label.innerHTML = this.responseText;
+        }
+    }
+
+    function choice4() {
+        let q4answer = document.querySelector('input[name="group4"]:checked').value;
+
+        let xReq = new XMLHttpRequest();
+        xReq.onreadystatechange = displayMsg4;
+
+        xReq.open('GET','/q4result?group4='+q4answer,true);
+        xReq.send();
+    }
+
+    function displayMsg4() {
+        let label = document.getElementById('message-check4')
+        
+        if (this.readyState == 4 && this.status == 200)
+        {
+            label.innerHTML = this.responseText;
+        }
+    }
+
+    function choice5() {
+        let q5answer = document.querySelector('input[name="group5"]:checked').value;
+
+        let xReq = new XMLHttpRequest();
+        xReq.onreadystatechange = displayMsg5;
+
+        xReq.open('GET','/q5result?group5='+q5answer,true);
+        xReq.send();
+    }
+
+    function displayMsg5() {
+        let label = document.getElementById('message-check5')
+        
+        if (this.readyState == 4 && this.status == 200)
+        {
+            label.innerHTML = this.responseText;
+        }
+    }
+
+    function checkScore() {
+        let q1answer = document.querySelector('input[name="group1"]:checked').value;
+        let q2answer = document.querySelector('input[name="group2"]:checked').value;
+        let q3answer = document.querySelector('input[name="group3"]:checked').value;
+        let q4answer = document.querySelector('input[name="group4"]:checked').value;
+        let q5answer = document.querySelector('input[name="group5"]:checked').value;
+
+        let xReq = new XMLHttpRequest();
+        xReq.onreadystatechange = displayScore;
+        
+        xReq.open('GET','/score?group1='+q1answer+'&group2='+q2answer+'&group3='+q3answer+'&group4='+q4answer+'&group5='+q5answer,true);
+        xReq.send();
+    }
+
+    function displayScore() {
+        let userScore = document.getElementById('testDiv')
+        
+        if (this.readyState == 4 && this.status == 200)
+        {
+            userScore.innerHTML = this.responseText;
+        }
+    }
+</script>
+</html>
